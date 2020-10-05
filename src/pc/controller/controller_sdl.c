@@ -215,6 +215,8 @@ static void controller_sdl_read(OSContPad *pad) {
     ltrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
     rtrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
 
+	bool inputChanged =false;
+	
     if(leftx!=previousLeftX||lefty!=previousLeftY||rightx!=previousRightX||righty!=previousRightY||ltrig!=previousLTrig||rtrig!=previousRTrig)
         inputChanged = true;
 	
