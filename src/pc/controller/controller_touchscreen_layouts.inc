@@ -28,6 +28,11 @@ struct Position GetDefaultZPos() {
 }
 
 struct Position GetDefaultRPos() {
+    struct Position ret = { .x = GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(20) << 2, .y = 290 };
+    return ret;
+}
+
+struct Position GetDefaultLPos() {
     struct Position ret = { .x = GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(20) << 2, .y = 170 };
     return ret;
 }
@@ -59,6 +64,7 @@ static struct ControlElement ControlElementsDefault[] = {
 {.type = Button, .GetPos = GetDefaultBPos, .character = 'b', .buttonID = B_BUTTON},
 {.type = Button, .GetPos = GetDefaultZPos, .character = 't', .buttonID = Z_TRIG}, //There's no z character, so let's just call it t for trigger
 {.type = Button, .GetPos = GetDefaultRPos, .character = 'r', .buttonID = R_TRIG},
+{.type = Button, .GetPos = GetDefaultLPos, .character = 'l', .buttonID = L_TRIG},
 {.type = Button, .GetPos = GetDefaultUpPos, .character = 'u', .buttonID = U_CBUTTONS},
 {.type = Button, .GetPos = GetDefaultDownPos, .character = 'd', .buttonID = D_CBUTTONS},
 {.type = Button, .GetPos = GetDefaultLeftPos, .character = 'l', .buttonID = L_CBUTTONS},
