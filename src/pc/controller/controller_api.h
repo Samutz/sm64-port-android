@@ -41,4 +41,16 @@ void controller_rumble_stop(void);
 // calls the shutdown() function of all controller subsystems
 void controller_shutdown(void);
 
+enum Input{
+    keyboard,
+    emscriptenKeyboard,
+    sdlGameController,
+    touchScreen,
+    wup,
+    xinput
+};
+
+extern void set_current_input(int in);
+extern int get_current_input();
+
 #endif

@@ -31,6 +31,14 @@
 int mouse_x;
 int mouse_y;
 
+static int16_t rightx;
+static int16_t righty;
+
+static int16_t leftx;
+static int16_t lefty;
+static int16_t ltrig;
+static int16_t rtrig;
+
 #ifdef BETTERCAMERA
 extern u8 newcam_mouse;
 #endif
@@ -192,13 +200,25 @@ static void controller_sdl_read(OSContPad *pad) {
         }
     }
 
-    int16_t leftx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTX);
-    int16_t lefty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTY);
-    int16_t rightx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTX);
-    int16_t righty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTY);
+    int16_t previousLeftX = leftx;
+    int16_t previousLeftY = lefty;
+    int16_t previousRightX = rightx;
+    int16_t previousRightY = righty;
+    int16_t previousLTrig = ltrig;
+    int16_t previousRTrig = rtrig;
 
-    int16_t ltrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
-    int16_t rtrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+    leftx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTX);
+    lefty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_LEFTY);
+    rightx = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTX);
+    righty = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_RIGHTY);
+
+    ltrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+    rtrig = SDL_GameControllerGetAxis(sdl_cntrl, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+
+	bool inputChanged =false;
+
+    if(leftx!=previousLeftX||lefty!=previousLeftY||rightx!=previousRightX||righty!=previousRightY||ltrig!=previousLTrig||rtrig!=previousRTrig)
+        inputChanged = true;
 
 #ifdef TARGET_WEB
     // Firefox has a bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1606562
@@ -217,7 +237,12 @@ static void controller_sdl_read(OSContPad *pad) {
     for (u32 i = 0; i < SDL_CONTROLLER_BUTTON_MAX; ++i) {
         const bool new = SDL_GameControllerGetButton(sdl_cntrl, i);
         update_button(i, new);
+	if(new)
+	    inputChanged = true;
     }
+
+    if(inputChanged)
+        set_current_input(sdlGameController);
 
     update_button(VK_LTRIGGER - VK_BASE_SDL_GAMEPAD, ltrig > AXIS_THRESHOLD);
     update_button(VK_RTRIGGER - VK_BASE_SDL_GAMEPAD, rtrig > AXIS_THRESHOLD);
