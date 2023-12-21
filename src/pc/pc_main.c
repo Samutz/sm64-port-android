@@ -198,25 +198,16 @@ void move_to_new_dir_user(char* file) {
 #endif
 
 void main_func(void) {
-#ifdef __ANDROID__
+#ifdef  TARGET_ANDROID
     //Move old stuff to new path
-    const char *basedir = SDL_AndroidGetExternalStoragePath();
     char gamedir[SYS_MAX_PATH];
-    snprintf(gamedir, sizeof(gamedir), "%s/%s", basedir, gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR);
+    const char *basedir = get_gamedir();
+    snprintf(gamedir, sizeof(gamedir), "%s/%s", 
+             basedir, gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR);
     if (stat(gamedir, NULL) == -1) {
         mkdir(gamedir, 0770);
     }
-    move_to_new_dir("sound");
-    move_to_new_dir("gfx");
-    move_to_new_dir("base.zip");
-#else
-    const char *gamedir = gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR;
-#endif
-    const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
-    fs_init(sys_ropaths, gamedir, userpath);
-
-    configfile_load(configfile_name());
-
+    
     if (gCLIOpts.FullScreen == 1)
         configWindow.fullscreen = true;
     else if (gCLIOpts.FullScreen == 2)
